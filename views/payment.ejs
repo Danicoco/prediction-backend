@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://sdk.monnify.com/plugin/monnify.js"
+    ></script>
+    <script>
+      function payWithMonnify() {
+        MonnifySDK.initialize({
+          amount: `<%=amount%>`,
+          currency: "NGN",
+          reference: `<%=reference%>`,
+          customerFullName: `<%=customerFullName%>`,
+          customerEmail: `<%=customerEmail%>`,
+          apiKey: `<%=apiKey%>`,
+          contractCode: `<%=contractCode%>`,
+          paymentDescription: `Deposit of <%=paymentDescription%>`,
+          metadata: {
+            uniqueId: `<%=uniqueId%>`,
+          },
+        //   onLoadStart: () => {
+        //     console.log("loading has started")
+        //   },
+        //   onLoadComplete: () => {
+        //     console.log("SDK is UP")
+        //   },
+          onComplete: function (response) {
+            console.log(response)
+          },
+          onClose: function (data) {
+            //Implement what should happen when the modal is closed here
+            window.location.href = `<%=redirectURL%>`
+          },
+        })
+      }
+
+      window.onload = function() {
+        payWithMonnify();
+      };
+    </script>
+  </head>
+  <body>
+    <!-- <div>
+      <button type="button" onclick="payWithMonnify()">Pay With Monnify</button>
+    </div> -->
+  </body>
+</html>
