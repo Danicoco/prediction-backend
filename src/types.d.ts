@@ -30,6 +30,13 @@ interface IWallet extends DefaultAttributes {
     dateOfLastTopUp?: Date;
 }
 
+interface IPin extends DefaultAttributes {
+    code: string;
+    user: string;
+    attemptLeft: number;
+    lastChangedAt: Date;
+}
+
 type TransactionStatus = 'pending' | 'successful' | 'failed'
 type TransactionType = 'credit' | 'debit'
 

@@ -7,22 +7,22 @@ import { create, fetch, } from "./controller"
 import { validator } from "../../common/utils"
 import { validateCreate } from "./middleware"
 
-const poolRouter = Router({
+const poolMemberRouter = Router({
     caseSensitive: true,
     strict: true,
 })
 
-poolRouter.post(
+poolMemberRouter.post(
     "/",
     validator.body(createSchema),
     validateCreate,
     create
 )
 
-poolRouter.get(
+poolMemberRouter.get(
     "/",
     validator.query(fetchSchema),
     fetch
 )
 
-export default poolRouter
+export default poolMemberRouter
