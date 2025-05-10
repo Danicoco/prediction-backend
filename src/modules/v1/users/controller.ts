@@ -30,7 +30,7 @@ export const create = async (
 
         return res
             .status(201)
-            .json(success("Account created successfully", {}, {  }))
+            .json(success("Account created successfully", {}, {}))
     } catch (error) {
         next(error)
     }
@@ -66,7 +66,7 @@ export const login = async (
             .json(
                 success(
                     "Logged In successfully",
-                    { verificationStatus: !!user.verifiedAt, },
+                    { verificationStatus: !!user.verifiedAt },
                     { token }
                 )
             )
@@ -81,12 +81,21 @@ export const update = async (
     next: NextFunction
 ) => {
     try {
-        const [_, error] = await tryPromise(
-            new UserService({ _id: req.params.id || req.user._id }).update(req.body)
+        const [user, error] = await tryPromise(
+            new UserService({ _id: req.params.id || req.user._id }).update(
+                req.body
+            )
         )
 
         if (error) throw catchError("Error processing request", 400)
-        return res.status(200).json(success("Account updated successfully", {}))
+
+        const token = encryptData(
+            JSON.stringify({ _id: user?._id, exp: addHours(new Date(), 48) })
+        )
+        
+        return res
+            .status(200)
+            .json(success("Account updated successfully", { token }))
     } catch (error) {
         next(error)
     }
