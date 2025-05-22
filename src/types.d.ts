@@ -14,6 +14,7 @@ interface IUser extends DefaultAttributes {
     firstName: string;
     lastName: string;
     email: string;
+    gender: string;
     phoneNumber: string;
     dateOfBirth: Date;
     password: string;

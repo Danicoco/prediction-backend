@@ -31,6 +31,9 @@ export const createSchema = z
         phoneNumber: z
             .string({ required_error: "Enter Phone Number" })
             .nonempty(),
+        gender: z
+            .string({ required_error: "Enter Gender" })
+            .nonempty(),
         dateOfBirth: z
             .string()
             .optional(),
