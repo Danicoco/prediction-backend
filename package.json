@@ -1,13 +1,13 @@
 {
-  "name": "trisonet-backend",
+  "name": "fantasypredict-backend",
   "version": "1.0.0",
-  "description": "trisonet Backend Service",
+  "description": "Fantasy Predict Backend Service",
   "main": "server.js",
   "repository": "",
   "homepage": "",
   "keywords": [
-    "trisonet",
-    "gaming"
+    "Fantasy Predict",
+    "prediction"
   ],
   "author": "Aderemi Dare",
   "license": "MIT",
@@ -21,10 +21,10 @@
     "lint": "eslint --ext .ts --ignore-path .gitignore .",
     "build": "yarn install && tsc -p .",
     "prepare": "husky install",
-    "docker-build": "docker build -t trisonet ./",
-    "docker": "docker run trisonet",
-    "pm2": "pm2 start npm --name \"trisonet_BE\" -- start",
-    "restart": " yarn && pm2 restart trisonet_BE"
+    "docker-build": "docker build -t FantasyPredict ./",
+    "docker": "docker run FantasyPredict",
+    "pm2": "pm2 start npm --name \"FantasyPredict_BE\" -- start",
+    "restart": " yarn && pm2 restart FantasyPredict_BE"
   },
   "dependencies": {
     "@hokify/agenda": "^6.3.0",
