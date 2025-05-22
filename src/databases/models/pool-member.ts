@@ -17,7 +17,7 @@ const PoolMemberSchema: Schema = new Schema<IPoolMember>(
     {
         autoIndex: true,
         versionKey: false,
-        collection: "PoolMembers",
+        collection: "poolMembers",
     }
 )
 
