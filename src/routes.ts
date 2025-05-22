@@ -7,7 +7,7 @@ const router = Router();
 router.use("/v1", v1);
 
 router.use("/", (_req: Request, res: Response, _next: NextFunction) =>
-  res.send("Welcome to trisonet backend service API")
+  res.send("Welcome to FANTASY PREDICT backend service API")
 );
 
 router.use("*", (_req: Request, res: Response, _next: NextFunction) =>
