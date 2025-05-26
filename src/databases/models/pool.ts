@@ -10,7 +10,8 @@ const configSchema = new Schema(
     {
         amount: { type: "Number", required: true },
         paid: { type: "Boolean", required: true },
-        poolSharing: { type: "String", required: true }
+        poolSharing: { type: "String", required: true },
+        endDate: { type: "Date", required: true }
     })
 
 const PoolSchema: Schema = new Schema<IPool>(
@@ -21,7 +22,7 @@ const PoolSchema: Schema = new Schema<IPool>(
         totalMembers: { type: "Number", },
         config: { type: configSchema, required: true },
         isActive: { type: "Boolean", default: true },
-        privacy: { type: "String", enum: ['Public', 'Private'] },
+        privacy: { type: "String", enum: ['public', 'private'] },
         deletedAt: { type: "String", default: null },
     },
     {

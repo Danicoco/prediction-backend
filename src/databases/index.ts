@@ -2,5 +2,8 @@ export { default as UserModel } from "./models/user";
 export { default as PoolModel } from "./models/pool";
 export { default as PinModel } from "./models/pin";
 export { default as WalletModel } from "./models/wallet";
+export { default as MatchModel } from "./models/matches";
+export { default as PredictionModel } from "./models/prediction";
 export { default as PoolMemberModel } from "./models/pool-member";
+export { default as CompetitionModel } from "./models/competition";
 export { default as TransactionModel } from "./models/transaction";

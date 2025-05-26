@@ -14,16 +14,21 @@ export const create = async (
             new PinService({ user: String(req.user._id) }).findOne()
         )
 
-        if (error) throw catchError("Error processing request");
-        if (pin) throw catchError("You already have a pin");
+        if (error) throw catchError("Error processing request")
+        if (pin) throw catchError("You already have a pin")
 
-        const [_, crtError] = await tryPromise(new PinService({}).create({ code: req.body.code, user: String(req.user._id), lastChangedAt: new Date(), attemptLeft: 3 }))
+        const [_, crtError] = await tryPromise(
+            new PinService({}).create({
+                code: req.body.code,
+                user: String(req.user._id),
+                lastChangedAt: new Date(),
+                attemptLeft: 3,
+            })
+        )
 
-        if (crtError) throw catchError("Error processing request");
+        if (crtError) throw catchError("Error processing request")
 
-        return res
-            .status(200)
-            .json(success("Pin created successfully", { }))
+        return res.status(200).json(success("Pin created successfully", {}))
     } catch (error) {
         next(error)
     }

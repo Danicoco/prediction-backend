@@ -28,17 +28,8 @@ export const createSchema = z
         config: z.object({
             amount: z.number(),
             paid: z.boolean(),
-            poolSharing: z.string(),
-            endDate: z.string()
+            poolSharing: z.string()
         }).required()
-    })
-    .strict()
-
-    export const fetchSchema = z
-    .object({
-        name: z.string().optional(),
-        privacy: z.string().optional(),
-        createdBy: z.string().optional(),
     })
     .strict()
 
