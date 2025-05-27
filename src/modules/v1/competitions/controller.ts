@@ -13,7 +13,7 @@ export const fetch = async (
     try {
         let result
         const [competitions, error] = await tryPromise(
-            new CompetitionService({}).findAll({})
+            new CompetitionService({}).findAll({}, 1, 20)
         )
 
         if (error) throw catchError("Error processing request")

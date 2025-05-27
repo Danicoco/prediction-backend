@@ -38,7 +38,7 @@ export const fetch = async (
 ) => {
     const { page, limit } = req.query
     try {
-        const [users, error] = await tryPromise(
+        const [pools, error] = await tryPromise(
             new PoolService({}).findAll(
                 composeFilter(req),
                 Number(page),
@@ -48,7 +48,7 @@ export const fetch = async (
 
         if (error) throw catchError("Errors retrieving users", 400)
 
-        return res.status(200).json(success("Users retrieved", users))
+        return res.status(200).json(success("Users retrieved", pools))
     } catch (error) {
         next(error)
     }
