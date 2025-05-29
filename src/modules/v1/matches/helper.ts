@@ -25,6 +25,7 @@ export const matchPipeline = (
     userId: string
 ) => {
     const filter = composeFilter(query);
+    console.log({ filter });
     return [
         {
             $match: {
