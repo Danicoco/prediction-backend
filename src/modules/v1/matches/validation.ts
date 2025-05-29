@@ -9,5 +9,6 @@ export const fetchSchema = z
             .nonempty(),
         stage: z.string().optional(),
         state: z.string().optional(),
+        pool: z.string().optional(),
     })
     .strict()

@@ -67,6 +67,7 @@ interface IPool extends DefaultAttributes {
         amount: number
         paid: boolean
         poolSharing: "first-take-all" | "top-three"
+        endDate: Date;
     }
     totalMembers: number
     isActive: boolean
@@ -225,6 +226,7 @@ interface IPrediction extends DefaultAttributes {
     awayTeamScore: number;
     point: number;
     pool: string;
+    competition: string;
 }
 
 interface IPaginator<T> {

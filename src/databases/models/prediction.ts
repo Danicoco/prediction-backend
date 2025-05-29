@@ -14,6 +14,7 @@ const PredictionSchema: Schema = new Schema<IPrediction>(
         awayTeamScore: { type: "Number", required: true },
         point: { type: "Number", required: true, default: 0 },
         pool: { type: "String", required: true, ref: "Pool" },
+        competition: { type: "String", required: true, ref: "Competition" },
         deletedAt: { type: "String", default: null },
     },
     {

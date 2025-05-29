@@ -3,23 +3,21 @@ import { NextFunction, Request, Response } from "express"
 
 import { catchError, success, tryPromise } from "../../common/utils"
 import MatchService from "./service"
-import { composeFilter } from "./helper"
+import { matchPipeline } from "./helper"
 import FootballData from "../../thirdpartyApi/football"
 import CompetitionService from "../competitions/service"
 import { endOfWeek, format, startOfWeek } from "date-fns"
 
 const getMatchWeek = async (query: Record<string, string>) => {
-    const { competition } = query
+    const { competition, pool, userId } = query
     let result
     const [matches, error] = await tryPromise(
-        new MatchService({}).findAll({
-            ...composeFilter(query),
-        })
+        new MatchService({}).aggregate(matchPipeline(query, pool, userId))
     )
 
     if (error) throw catchError("Error processing request")
-    result = matches?.docs || []
-    if (!matches?.docs.length) {
+    result = matches || []
+    if (!matches?.length) {
         const comp = await new CompetitionService({
             _id: competition,
         }).findOne()
@@ -33,7 +31,7 @@ const getMatchWeek = async (query: Record<string, string>) => {
             comp.code,
             { ...date }
         )
-        
+
         const newMatches = matchQuery.map(match => ({
             status: match.status.toLowerCase(),
             homeTeam: {
@@ -64,7 +62,10 @@ export const fetch = async (
     next: NextFunction
 ) => {
     try {
-        const result = await getMatchWeek(req.query as Record<string, string>)
+        const result = await getMatchWeek({
+            ...req.query,
+            userId: req.user._id,
+        } as Record<string, string>)
 
         return res
             .status(200)

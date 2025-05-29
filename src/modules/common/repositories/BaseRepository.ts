@@ -1,6 +1,6 @@
 /** @format */
 
-import { ClientSession, FilterQuery, Model, PopulateOptions, QueryOptions } from "mongoose"
+import { ClientSession, FilterQuery, Model, PipelineStage, PopulateOptions, QueryOptions } from "mongoose"
 import { IPaginateResponse, IPaginator } from "../../../types"
 
 class BaseRepository<T> {
@@ -79,6 +79,11 @@ class BaseRepository<T> {
             {},
             { lean: true, sort: { createdAt: -1 }, ...options }
         )
+        return data
+    }
+
+    public async aggregate(pipeline: PipelineStage[]): Promise<T[] | null> {
+        const data = await this.model.aggregate(pipeline);
         return data
     }
 

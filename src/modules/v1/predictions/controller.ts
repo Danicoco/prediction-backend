@@ -5,20 +5,25 @@ import { catchError, success } from "../../common/utils"
 import PredictionService from "./service"
 import MatchService from "../matches/service"
 import PoolMemberService from "../pool-members/service"
+import PoolService from "../pools/service"
+
 
 export const create = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const { homeTeamScore, awayTeamScore, pool, match } = req.body
+    const { homeTeamScore, awayTeamScore, pool, match, competition } = req.body
     try {
-        const [member, dbMatch, dbPrediction] = await Promise.all([
+        const [dbPool, member, dbMatch, dbPrediction] = await Promise.all([
+            new PoolService({ _id: pool }).findOne(),
             new PoolMemberService({ pool, user: req.user._id }).findOne(),
             new MatchService({ _id: match }).findOne(),
             new PredictionService({ match, pool }).findOne()
         ])
-        if (!member) throw catchError("You're not a member of this pool", 400);
+        if (!dbPool) throw catchError("Pool does not exist", 400);
+        // if (isAfter(new Date(), new Date(dbPool?.config.endDate))) throw catchError("Pool has ended.");
+        if (!member && String(dbPool.createdBy) !== String(req.user._id)) throw catchError("You're not a member of this pool", 400);
         if (!dbMatch) throw catchError("Match does not exists", 400)
         if (dbPrediction?.point) throw catchError("Match already finished", 400);
         
@@ -31,7 +36,8 @@ export const create = async (
                 match,
                 awayTeamScore,
                 homeTeamScore,
-                point: 0
+                point: 0,
+                competition
             })
         }
 
