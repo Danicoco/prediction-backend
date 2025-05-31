@@ -109,13 +109,14 @@ export const verifyTransaction = async (
         if (trans) {
             const session = await db.startSession()
             session.withTransaction(async () => {
-                await creditWallet({
+                const r = await creditWallet({
                     userId: String(req.user._id),
                     session,
                     amount: Number(trans.amount / 100),
                     pendingTransaction: false,
                     transactionMeta: { ...trans },
                 })
+                console.log({ r })
             })
             await session.endSession()
         }
