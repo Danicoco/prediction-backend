@@ -2,7 +2,7 @@
 
 import { Router } from "express"
 
-import { get } from "./controller"
+import { get, verifyTransaction } from "./controller"
 
 const walletRouter = Router({
     caseSensitive: true,
@@ -10,5 +10,6 @@ const walletRouter = Router({
 })
 
 walletRouter.get("/", get)
+walletRouter.post("/verify-payment", verifyTransaction)
 
 export default walletRouter
