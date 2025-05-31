@@ -6,7 +6,7 @@ import PredictionService from "./service"
 import MatchService from "../matches/service"
 import PoolMemberService from "../pool-members/service"
 import PoolService from "../pools/service"
-
+import { leaderboardPipeline } from "./helper"
 
 export const create = async (
     req: Request,
@@ -19,16 +19,20 @@ export const create = async (
             new PoolService({ _id: pool }).findOne(),
             new PoolMemberService({ pool, user: req.user._id }).findOne(),
             new MatchService({ _id: match }).findOne(),
-            new PredictionService({ match, pool }).findOne()
+            new PredictionService({ match, pool }).findOne(),
         ])
-        if (!dbPool) throw catchError("Pool does not exist", 400);
+        if (!dbPool) throw catchError("Pool does not exist", 400)
         // if (isAfter(new Date(), new Date(dbPool?.config.endDate))) throw catchError("Pool has ended.");
-        if (!member && String(dbPool.createdBy) !== String(req.user._id)) throw catchError("You're not a member of this pool", 400);
+        if (!member && String(dbPool.createdBy) !== String(req.user._id))
+            throw catchError("You're not a member of this pool", 400)
         if (!dbMatch) throw catchError("Match does not exists", 400)
-        if (dbPrediction?.point) throw catchError("Match already finished", 400);
-        
+        if (dbPrediction?.point) throw catchError("Match already finished", 400)
+
         if (dbPrediction) {
-            await new PredictionService({ _id: dbPrediction._id }).update({ homeTeamScore, awayTeamScore })
+            await new PredictionService({ _id: dbPrediction._id }).update({
+                homeTeamScore,
+                awayTeamScore,
+            })
         } else {
             await new PredictionService({}).create({
                 user: String(req.user._id),
@@ -37,11 +41,33 @@ export const create = async (
                 awayTeamScore,
                 homeTeamScore,
                 point: 0,
-                competition
+                competition,
             })
         }
 
-        return res.status(200).json(success("Prediction added successfully", {}))
+        return res
+            .status(200)
+            .json(success("Prediction added successfully", {}))
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const leaderboard = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { competition } = req.query
+    try {
+        const leaderboard = await new PredictionService({}).aggregate(
+            // @ts-ignore
+            leaderboardPipeline(req.params.pool, competition as string)
+        )
+
+        return res
+            .status(200)
+            .json(success("Leaderboard retrieved", leaderboard))
     } catch (error) {
         next(error)
     }
