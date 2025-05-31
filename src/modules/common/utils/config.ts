@@ -23,7 +23,11 @@ export const configs = {
     DB_NAME_PROD: getEnv("DB_NAME_PROD"),
     ENCRYPTIONIV: getEnv("ENCRYPTIONIV"),
     ENCRYPTIONKEY: getEnv("ENCRYPTIONKEY"),
-    FOOTBALL_API: getEnv("FOOTBALL_API")
+    FOOTBALL_API: getEnv("FOOTBALL_API"),
+    PAYSTACK_SECRET: getEnv("PAYSTACK_SECRET"), 
+    PAYSTACK_URL: getEnv("PAYSTACK_URL"),
+    PAYSTACK_PUBLIC: getEnv("PAYSTACK_PUBLIC"),
+    PAYSTACK_PROD_PUBLIC: getEnv("PAYSTACK_PROD_PUBLIC")
 }
 
 validateEnvs(Object.keys(configs))

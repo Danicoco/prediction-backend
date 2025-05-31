@@ -1,47 +1,45 @@
-<html>
-  <head>
-    <script
-      type="text/javascript"
-      src="https://sdk.monnify.com/plugin/monnify.js"
-    ></script>
-    <script>
-      function payWithMonnify() {
-        MonnifySDK.initialize({
-          amount: `<%=amount%>`,
-          currency: "NGN",
-          reference: `<%=reference%>`,
-          customerFullName: `<%=customerFullName%>`,
-          customerEmail: `<%=customerEmail%>`,
-          apiKey: `<%=apiKey%>`,
-          contractCode: `<%=contractCode%>`,
-          paymentDescription: `Deposit of <%=paymentDescription%>`,
-          metadata: {
-            uniqueId: `<%=uniqueId%>`,
-          },
-        //   onLoadStart: () => {
-        //     console.log("loading has started")
-        //   },
-        //   onLoadComplete: () => {
-        //     console.log("SDK is UP")
-        //   },
-          onComplete: function (response) {
-            console.log(response)
-          },
-          onClose: function (data) {
-            //Implement what should happen when the modal is closed here
-            window.location.href = `<%=redirectURL%>`
-          },
-        })
-      }
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body>
+    <form>
+        <script defer src="https://js.paystack.co/v1/inline.js"></script>
+        <div id="message" align="center"></div>
+    </form>
 
-      window.onload = function() {
-        payWithMonnify();
-      };
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            payWithPaystack();
+        });
+
+        function payWithPaystack() {
+            var handler = PaystackPop.setup({
+                currency: "NGN",
+                key: `<%=key%>`,
+                email: `<%=email%>`,
+                ref: `<%=reference%>`,
+                amount: `<%=amount%>`,
+                phone_number: `<%=phone%>`,
+                metadata: {
+                    custom_fields: [{
+                        customerName: `<%=fullName%>`,
+                    }]
+                },
+                callback: function (response) {
+
+                    if (response.reference) {
+                        window.ReactNativeWebView.postMessage(response.reference);
+                    } else {
+                        document.getElementById("message").innerHTML = `<h2>Error from Paystack! We could not charge card, try again.</h2>`;
+                    }
+
+                },
+                onClose: function () {
+                    window.ReactNativeWebView.postMessage('closed');
+                }
+            });
+            handler.openIframe();
+        }
     </script>
-  </head>
-  <body>
-    <!-- <div>
-      <button type="button" onclick="payWithMonnify()">Pay With Monnify</button>
-    </div> -->
-  </body>
+</body>
+
 </html>

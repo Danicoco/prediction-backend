@@ -28,15 +28,15 @@ app.use(
             defaultSrc: ["'self'"],
             fontSrc: ["'self'"],
             imgSrc: ["'self'"],
-            scriptSrc: ["'self'", "https://sdk.monnify.com", "'unsafe-inline'"],
-            connectSrc: ["'self'", "https://sandbox.sdk.monnify.com", "'unsafe-inline'"],
-            frameSrc: ["'self'", "https://sandbox.sdk.monnify.com", "'unsafe-inline'"],
+            scriptSrc: ["'self'"],
             styleSrc: ["'self'"],
+            frameSrc: ["'self'"],
           },
-        //   reportOnly: true, // Set
+          reportOnly: true, // Set
         },
     })
-)
+);
+
 app.use(
     cors({
         origin: (_origin, callback) => {

@@ -229,6 +229,26 @@ interface IPrediction extends DefaultAttributes {
     competition: string;
 }
 
+interface IWithdrawal extends DefaultAttributes {
+    user: string;
+    amount: string;
+    meta: Record<string, any>
+}
+
+interface IBank extends DefaultAttributes {
+    user: string;
+    bankName: string;
+    bankCode: string;
+    accountName: string;
+    accountNumber: string;
+}
+
+type PaystackResponse = {
+    status: boolean
+    message: string
+    data: PaystackResponseData
+}
+
 interface IPaginator<T> {
     query?: T
     page: number
