@@ -102,8 +102,10 @@ export const verifyTransaction = async (
 ) => {
     const { reference } = req.body
     try {
+        console.log({ reference })
         const trans = await new Paystack(reference).verifyTransaction()
 
+        console.log({ trans })
         if (trans) {
             const session = await db.startSession()
             session.withTransaction(async () => {
