@@ -105,18 +105,16 @@ export const verifyTransaction = async (
         console.log({ reference })
         const trans = await new Paystack(reference).verifyTransaction()
 
-        console.log({ trans })
         if (trans) {
             const session = await db.startSession()
-            session.withTransaction(async () => {
-                const r = await creditWallet({
+            await session.withTransaction(async () => {
+                await creditWallet({
                     userId: String(req.user._id),
                     session,
                     amount: Number(trans.amount / 100),
                     pendingTransaction: false,
                     transactionMeta: { ...trans },
                 })
-                console.log({ r })
             })
             await session.endSession()
         }
