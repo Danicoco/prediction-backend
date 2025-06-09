@@ -13,7 +13,7 @@ const PredictionSchema: Schema = new Schema<IPrediction>(
         homeTeamScore: { type: "Number", required: true },
         awayTeamScore: { type: "Number", required: true },
         point: { type: "Number", required: true, default: 0 },
-        pool: { type: "String", required: true, ref: "Pool" },
+        pool: { type: "String" },
         competition: { type: "String", required: true, ref: "Competition" },
         deletedAt: { type: "String", default: null },
     },
