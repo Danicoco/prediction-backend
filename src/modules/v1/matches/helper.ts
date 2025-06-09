@@ -21,7 +21,6 @@ export const composeFilter = (query: Record<string, string>) => {
 
 export const matchPipeline = (
     query: Record<string, string>,
-    pool: string,
     userId: string
 ) => {
     const filter = composeFilter(query);
@@ -36,7 +35,6 @@ export const matchPipeline = (
             $lookup: {
                 let: {
                     userId: { $toString: userId },
-                    poolId: { $toString: pool },
                     competitionId: { $toString: query.competition },
                     matchId: { $toString: "$_id" },
                 },
@@ -48,7 +46,6 @@ export const matchPipeline = (
                                 $and: [
                                     { $eq: ["$user", "$$userId"] },
                                     { $eq: ["$match", "$$matchId"] },
-                                    { $eq: ["$pool", "$$poolId"] },
                                     {
                                         $eq: [
                                             "$competition",

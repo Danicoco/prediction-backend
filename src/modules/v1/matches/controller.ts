@@ -9,11 +9,11 @@ import CompetitionService from "../competitions/service"
 import { endOfWeek, format, startOfWeek } from "date-fns"
 
 const getMatchWeek = async (query: Record<string, string>) => {
-    const { competition, pool, userId } = query;
+    const { competition, userId } = query;
     console.log({ query });
     let result
     const [matches, error] = await tryPromise(
-        new MatchService({}).aggregate(matchPipeline(query, pool, userId))
+        new MatchService({}).aggregate(matchPipeline(query, userId))
     )
     console.log({ matches });
     if (error) throw catchError("Error processing request")
