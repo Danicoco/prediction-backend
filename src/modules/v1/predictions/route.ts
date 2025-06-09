@@ -13,6 +13,6 @@ const predictionRouter = Router({
 
 predictionRouter.post("/", validator.body(createSchema), create)
 
-predictionRouter.get("/:pool", leaderboard);
+predictionRouter.get("/", leaderboard);
 
 export default predictionRouter

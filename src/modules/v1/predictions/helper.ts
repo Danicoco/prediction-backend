@@ -1,9 +1,17 @@
-export const leaderboardPipeline = (pool: string, competition?: string) => [
+import { endOfDay, startOfDay } from "date-fns";
+
+export const leaderboardPipeline = (pool: string, competition: string, fromDate: string, toDate: string) => [
     {
       $match: {
-        pool,
+        ...(pool && { pool }),
         ...(competition && {
             competition
+        }),
+        ...(fromDate && toDate && {
+          createdAt: {
+            $gte: startOfDay(new Date(fromDate)),
+            $lte: endOfDay(new Date(toDate))
+          }
         })
       }
     },

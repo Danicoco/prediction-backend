@@ -92,7 +92,7 @@ export const creditWallet = async (params: CreditProps) => {
 
     const [currentWallet] = await Promise.all([
         new WalletService({ _id: wallet._id }).update(
-            { balance: Number(wallet.balance) - Number(amount), dateOfLastTopUp: new Date() },
+            { balance: Number(wallet.balance) + Number(amount), dateOfLastTopUp: new Date() },
             session
         ),
     ])

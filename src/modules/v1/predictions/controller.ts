@@ -58,11 +58,11 @@ export const leaderboard = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { competition } = req.query
+    const { competition, pool, fromDate, toDate } = req.query
     try {
         const leaderboard = await new PredictionService({}).aggregate(
             // @ts-ignore
-            leaderboardPipeline(req.params.pool, competition as string)
+            leaderboardPipeline(pool, competition as string, fromDate, toDate)
         )
 
         return res
