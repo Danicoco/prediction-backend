@@ -1,59 +1,78 @@
-import { endOfDay, startOfDay } from "date-fns";
+/** @format */
 
-export const leaderboardPipeline = (competition: string, userIds = [], fromDate: string, toDate: string) => [
-  {
-    ...(userIds.length && {
-      _id: { $in: userIds }
-    })
-  },
-  {
-    $limit: 50
-  },
-  {
-    $lookup: {
-      let: {
-        userId: { $toString: "$_id" }
-      },
-      from: "predictions",
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                { $eq: ["$user", "$$userId"] },
+import { endOfDay, startOfDay } from "date-fns"
+
+export const leaderboardPipeline = (
+    competition: string,
+    userIds = [],
+    fromDate: string,
+    toDate: string
+) => [
+    {
+       $match: {
+        ...(userIds.length && {
+          _id: { $in: userIds },
+      }),
+       }
+    },
+    {
+        $limit: 50,
+    },
+    {
+        $lookup: {
+            let: {
+                userId: { $toString: "$_id" },
+            },
+            from: "predictions",
+            pipeline: [
                 {
-                  ...(competition && {
-                    competition 
-                  }),
-                  ...(fromDate && toDate && {
-                    createdAt: {
-                      $gte: startOfDay(new Date(fromDate)),
-                      $lte: endOfDay(new Date(toDate)),
-                    }
-                   })
-                }
-              ]
-            }
-          }
+                    $match: {
+                        $expr: {
+                            $and: [
+                                { $eq: ["$user", "$$userId"] },
+                                {
+                                    ...(competition && {
+                                        competition,
+                                    }),
+                                    ...(fromDate &&
+                                        toDate && {
+                                            createdAt: {
+                                                $gte: startOfDay(
+                                                    new Date(fromDate)
+                                                ),
+                                                $lte: endOfDay(
+                                                    new Date(toDate)
+                                                ),
+                                            },
+                                        }),
+                                },
+                            ],
+                        },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$user",
+                        totalPoints: { $sum: "$point" },
+                    },
+                },
+            ],
+            as: "predictions",
         },
-        {
-          $group: {
-            _id: "$user",
-            totalPoints: { $sum: "$point" }
-          }
+    },
+    {
+        $addFields: {
+            predictions: {
+                $ifNull: [
+                    { $arrayElemAt: ["$predictions", 0] },
+                    { _id: null, totalPoints: 0 },
+                ],
+            },
         },
-      ],
-      as: "predictions"
-    }
-  },
-  {
-    $addFields: {
-      predictions: { $ifNull: [{ $arrayElemAt: ["$predictions", 0] }, { _id: null, totalPoints: 0 }] }
-    }
-  },
-     {
-      $sort: {
-        "predictions.totalPoints": -1
-      }
+    },
+    {
+        $sort: {
+            "predictions.totalPoints": -1,
+        },
     },
 ]
