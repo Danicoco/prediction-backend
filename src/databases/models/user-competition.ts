@@ -12,6 +12,7 @@ const CompetitionSchema: Schema = new Schema<IUserCompetition>(
         name: { type: "String", required: true },
         code: { type: "String", required: true },
         type: { type: "String", required: true },
+        competition: { type: "String", required: true, ref: "Competition" },
         user: { type: "String", required: true, ref: "User" },
         deletedAt: { type: "String", default: null },
     },

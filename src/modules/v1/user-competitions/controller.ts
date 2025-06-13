@@ -10,18 +10,19 @@ export const create = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { code } = req.body;
+    const { competitionId } = req.body;
     try {
         const [userComp, comp] = await Promise.all([
-            new UserCompetitionService({ code }).findOne(),
-            new CompetitionService({ code }).findOne(),
+            new UserCompetitionService({ competition: competitionId }).findOne(),
+            new CompetitionService({ _id: competitionId }).findOne(),
         ])
         if (userComp) throw catchError("Competition added already");
         if (!comp) throw catchError("Invalid competition");
 
         await new UserCompetitionService({}).create({
             ...comp,
-            user: String(req.user._id)
+            user: String(req.user._id),
+            competition: String(comp._id)
         })
 
         return res.status(200).json(
@@ -52,7 +53,7 @@ export const fetch = async (
         
         const competitions = userCompetitions?.docs || [];
         if(defaultComp) {
-            competitions?.push({ ...defaultComp, user: String(_id) });
+            competitions?.push({ ...defaultComp, user: String(_id), competition: String(defaultComp._id) });
         }
 
         return res.status(200).json(success("User Competitions retrieved successfully", competitions))

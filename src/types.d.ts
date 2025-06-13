@@ -203,6 +203,7 @@ interface ICompetition extends DefaultAttributes {
 
 interface IUserCompetition extends ICompetition {
     user: string
+    competition: string;
 }
 
 interface IMatch extends DefaultAttributes {
