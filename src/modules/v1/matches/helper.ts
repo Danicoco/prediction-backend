@@ -3,14 +3,18 @@
 import { endOfWeek, startOfWeek } from "date-fns"
 
 export const composeFilter = (query: Record<string, string>) => {
-    const { competition, status, stage, matchday } = query
-    let filter = {
-        date: {
-            $gte: startOfWeek(new Date()),
-            $lte: endOfWeek(new Date()),
-        },
-    } as any
+    const { competition, status, stage, matchday, date } = query
+    let filter = {}
 
+    if (date) {
+        filter = {
+            ...filter,
+            date: {
+                $gte: startOfWeek(new Date(date)),
+                $lte: endOfWeek(new Date(date)),
+            },
+        }
+    }
     if (competition) filter = { ...filter, competition }
     if (status) filter = { ...filter, status }
     if (matchday) filter = { ...filter, matchday }
@@ -23,8 +27,8 @@ export const matchPipeline = (
     query: Record<string, string>,
     userId: string
 ) => {
-    const filter = composeFilter(query);
-    console.log({ filter });
+    const filter = composeFilter(query)
+
     return [
         {
             $match: {
@@ -59,6 +63,6 @@ export const matchPipeline = (
                 ],
                 as: "prediction",
             },
-        }
+        },
     ]
 }

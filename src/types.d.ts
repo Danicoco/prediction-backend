@@ -198,6 +198,7 @@ interface ICompetition extends DefaultAttributes {
     name: string
     type: string
     code: string
+    filters: [{ name: string, value: string }],
     default: boolean;
 }
 
@@ -220,7 +221,7 @@ interface IMatch extends DefaultAttributes {
         crest: string
         score: number | null
     }
-    matchday: number;
+    matchday: string;
     date: Date;
     competition: string;
     stage: string;

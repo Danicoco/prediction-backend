@@ -12,6 +12,7 @@ const CompetitionSchema: Schema = new Schema<ICompetition>(
         name: { type: "String", required: true },
         code: { type: "String", required: true },
         type: { type: "String", required: true },
+        filters: { type: [{ name: "String", value: "String" }] },
         default: { type: "Boolean", default: false },
         deletedAt: { type: "String", default: null },
     },
