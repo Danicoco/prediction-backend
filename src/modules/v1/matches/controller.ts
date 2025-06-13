@@ -9,7 +9,6 @@ import CompetitionService from "../competitions/service"
 import { endOfWeek, format, startOfWeek } from "date-fns"
 
 
-
 const getMatchWeek = async (query: Record<string, string>) => {
     const { competition, userId } = query
     

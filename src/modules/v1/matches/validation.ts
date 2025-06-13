@@ -10,5 +10,6 @@ export const fetchSchema = z
         stage: z.string().optional(),
         state: z.string().optional(),
         pool: z.string().optional(),
+        matchday: z.string().optional(),
     })
     .strict()
