@@ -70,6 +70,7 @@ interface IPool extends DefaultAttributes {
         endDate: Date;
     }
     totalMembers: number
+    competition: string;
     isActive: boolean
     createdBy: string
 }
@@ -197,6 +198,11 @@ interface ICompetition extends DefaultAttributes {
     name: string
     type: string
     code: string
+    default: boolean;
+}
+
+interface IUserCompetition extends ICompetition {
+    user: string
 }
 
 interface IMatch extends DefaultAttributes {

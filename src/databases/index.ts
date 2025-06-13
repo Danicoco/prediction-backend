@@ -9,3 +9,4 @@ export { default as CompetitionModel } from "./models/competition";
 export { default as TransactionModel } from "./models/transaction";
 export { default as BankModel } from "./models/bank";
 export { default as WithdrawalModel } from "./models/withdrawal";
+export { default as UserCompetitionModel } from "./models/user-competition";

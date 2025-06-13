@@ -13,6 +13,7 @@ import poolRouter from "./pools/route";
 import withdrawalRouter from "./withdrawals/route";
 import bankRouter from "./banks/route";
 import { securePayment, webhook } from "./wallets/controller";
+import userCompetitionRouter from "./user-competitions/route";
 
 const router = Router();
 router.use("/users", userRouter);
@@ -26,6 +27,7 @@ router.use("/withdrawals", Authenticate, withdrawalRouter);
 router.use("/pool-members", Authenticate, poolMemberRouter);
 router.use("/competitions", Authenticate, competitionRouter);
 router.use("/transactions", Authenticate, transactionRouter);
+router.use("/user-competitions", Authenticate, userCompetitionRouter);
 
 router.get("/pay", securePayment)
 router.get("/webhook", webhook)

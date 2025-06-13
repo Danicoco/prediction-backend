@@ -1,54 +1,59 @@
 import { endOfDay, startOfDay } from "date-fns";
 
-export const leaderboardPipeline = (pool: string, competition: string, fromDate: string, toDate: string) => [
-    {
-      $match: {
-        ...(pool && { pool }),
-        ...(competition && {
-            competition
-        }),
-        ...(fromDate && toDate && {
-          createdAt: {
-            $gte: startOfDay(new Date(fromDate)),
-            $lte: endOfDay(new Date(toDate))
-          }
-        })
-      }
-    },
-    {
-      $group: {
-        _id: "$user",
-        totalPoints: { $sum: "$point" }
-      }
-    },
-    {
-      $sort: {
-        totalPoints: -1
-      }
-    },
-    {
-      $lookup: {
-        let: {
-          userId: { $toObjectId: "$_id" }
-        },
-        from: "users",
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: ["$_id", "$$userId"] }
-                ]
-              }
+export const leaderboardPipeline = (competition: string, userIds = [], fromDate: string, toDate: string) => [
+  {
+    ...(userIds.length && {
+      _id: { $in: userIds }
+    })
+  },
+  {
+    $limit: 50
+  },
+  {
+    $lookup: {
+      let: {
+        userId: { $toString: "$_id" }
+      },
+      from: "predictions",
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$user", "$$userId"] },
+                {
+                  ...(competition && {
+                    competition 
+                  }),
+                  ...(fromDate && toDate && {
+                    createdAt: {
+                      $gte: startOfDay(new Date(fromDate)),
+                      $lte: endOfDay(new Date(toDate)),
+                    }
+                   })
+                }
+              ]
             }
           }
-        ],
-        as: "user"
+        },
+        {
+          $group: {
+            _id: "$user",
+            totalPoints: { $sum: "$point" }
+          }
+        },
+      ],
+      as: "predictions"
+    }
+  },
+  {
+    $addFields: {
+      predictions: { $ifNull: [{ $arrayElemAt: ["$predictions", 0] }, { _id: null, totalPoints: 0 }] }
+    }
+  },
+     {
+      $sort: {
+        "predictions.totalPoints": -1
       }
     },
-    {
-      $addFields: {
-        user: { $arrayElemAt: ["$user", 0] }
-      }
-    }
-  ]
+]

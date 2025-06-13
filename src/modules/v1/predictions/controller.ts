@@ -5,6 +5,7 @@ import { catchError, success } from "../../common/utils"
 import PredictionService from "./service"
 import MatchService from "../matches/service"
 import { leaderboardPipeline } from "./helper"
+import UserService from "../users/service"
 
 export const create = async (
     req: Request,
@@ -51,11 +52,11 @@ export const leaderboard = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { competition, pool, fromDate, toDate } = req.query
+    const { competition, fromDate, toDate } = req.query
     try {
-        const leaderboard = await new PredictionService({}).aggregate(
+        const leaderboard = await new UserService({}).aggregate(
             // @ts-ignore
-            leaderboardPipeline(pool, competition as string, fromDate, toDate)
+            leaderboardPipeline(competition as string, [], fromDate, toDate)
         )
 
         return res

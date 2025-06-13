@@ -4,21 +4,21 @@ import { Schema } from "mongoose"
 import { mongoosePagination, Pagination } from "mongoose-paginate-ts"
 
 import { db } from "../connection"
-import { ICompetition } from "../../types"
+import { IUserCompetition } from "../../types"
 
 
-const CompetitionSchema: Schema = new Schema<ICompetition>(
+const CompetitionSchema: Schema = new Schema<IUserCompetition>(
     {
         name: { type: "String", required: true },
         code: { type: "String", required: true },
         type: { type: "String", required: true },
-        default: { type: "Boolean", default: false },
+        user: { type: "String", required: true, ref: "User" },
         deletedAt: { type: "String", default: null },
     },
     {
         autoIndex: true,
         versionKey: false,
-        collection: "competitions",
+        collection: "user-competitions",
     }
 )
 
@@ -26,8 +26,8 @@ CompetitionSchema.set("timestamps", true)
 CompetitionSchema.plugin(mongoosePagination)
 CompetitionSchema.index({ "user": 1 })
 
-const CompetitionModel = db.model<ICompetition, Pagination<ICompetition>>(
-    "Competition",
+const CompetitionModel = db.model<IUserCompetition, Pagination<IUserCompetition>>(
+    "UserCompetition",
     // @ts-ignore
     CompetitionSchema
 )
