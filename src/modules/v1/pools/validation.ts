@@ -29,7 +29,8 @@ export const createSchema = z
             amount: z.number(),
             paid: z.boolean(),
             poolSharing: z.string(),
-            endDate: z.string()
+            endDate: z.string(),
+            competition: z.string()
         }).required()
     })
     .strict()
