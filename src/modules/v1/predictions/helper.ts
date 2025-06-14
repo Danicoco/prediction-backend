@@ -9,11 +9,11 @@ export const leaderboardPipeline = (
     toDate: string
 ) => [
     {
-       $match: {
-        ...(userIds.length && {
-          _id: { $in: userIds },
-      }),
-       }
+        $match: {
+            ...(userIds.length && {
+                _id: { $in: userIds },
+            }),
+        },
     },
     {
         $limit: 50,
@@ -32,18 +32,28 @@ export const leaderboardPipeline = (
                                 { $eq: ["$user", "$$userId"] },
                                 {
                                     ...(competition && {
-                                        competition,
+                                        $eq: ["$competition", competition],
                                     }),
                                     ...(fromDate &&
                                         toDate && {
-                                            createdAt: {
-                                                $gte: startOfDay(
-                                                    new Date(fromDate)
-                                                ),
-                                                $lte: endOfDay(
-                                                    new Date(toDate)
-                                                ),
-                                            },
+                                            $and: [
+                                                {
+                                                    $gte: [
+                                                        "$createdAt",
+                                                        startOfDay(
+                                                            new Date(fromDate)
+                                                        ),
+                                                    ],
+                                                },
+                                                {
+                                                    $gte: [
+                                                        "$createdAt",
+                                                        endOfDay(
+                                                            new Date(toDate)
+                                                        ),
+                                                    ],
+                                                },
+                                            ],
                                         }),
                                 },
                             ],
