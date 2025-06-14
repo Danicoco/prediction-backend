@@ -19,6 +19,7 @@ const PoolSchema: Schema = new Schema<IPool>(
         createdBy: { type: "String", required: true, ref: "User" },
         name: { type: "String", required: true, unique: true },
         description: { type: "String", },
+        competition: { type: "String", required: true, ref: "Competition" },
         totalMembers: { type: "Number", },
         config: { type: configSchema, required: true },
         isActive: { type: "Boolean", default: true },
