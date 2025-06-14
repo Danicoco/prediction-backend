@@ -33,7 +33,7 @@ export const validateCreate = async (
             const session = await db.startSession()
             await session.withTransaction(async () => {
                 debitWallet({
-                    userId: String(req.user),
+                    userId: String(req.user._id),
                     session: session,
                     amount: pool.config.amount,
                     isWithdrawal: false,
