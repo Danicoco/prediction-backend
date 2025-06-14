@@ -25,12 +25,12 @@ export const createSchema = z
             .string({ required_error: "Describe your pool" })
             .nonempty(),
         privacy: z.string({ required_error: "Select Privacy" }).nonempty(),
+        competition: z.string(),
         config: z.object({
             amount: z.number(),
             paid: z.boolean(),
             poolSharing: z.string(),
             endDate: z.string(),
-            competition: z.string()
         }).required()
     })
     .strict()
