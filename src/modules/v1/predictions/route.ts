@@ -2,7 +2,7 @@
 
 import { Router } from "express"
 
-import { create, leaderboard } from "./controller"
+import { applicationInReview, create, leaderboard } from "./controller"
 import { validator } from "../../common/utils"
 import { createSchema } from "./validation"
 
@@ -14,5 +14,6 @@ const predictionRouter = Router({
 predictionRouter.post("/", validator.body(createSchema), create)
 
 predictionRouter.get("/", leaderboard);
+predictionRouter.get("/in-review", applicationInReview);
 
 export default predictionRouter

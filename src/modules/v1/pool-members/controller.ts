@@ -92,7 +92,10 @@ export const fetch = async (
             new PoolMemberService({}).findAll(
                 composeFilter(req),
                 Number(page),
-                Number(limit)
+                Number(limit),
+                [
+                    { path: 'user', select: 'firstName lastName email' }
+                ]
             )
         )
 
