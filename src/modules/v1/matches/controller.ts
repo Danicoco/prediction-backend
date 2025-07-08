@@ -16,7 +16,7 @@ const getMatchWeek = async (query: Record<string, string>) => {
     const [matches, error] = await tryPromise(
         new MatchService({}).aggregate(matchPipeline(query, userId))
     )
-    console.log({ matches })
+
     if (error) throw catchError("Error processing request")
     result = matches || []
     if (!matches?.length) {
@@ -64,7 +64,6 @@ export const fetch = async (
     next: NextFunction
 ) => {
     try {
-        console.log({ ...req.query })
         const result = await getMatchWeek({
             ...req.query,
             userId: req.user._id,

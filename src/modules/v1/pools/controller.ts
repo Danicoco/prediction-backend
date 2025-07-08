@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express"
 import { catchError, success, tryPromise } from "../../common/utils"
 import PoolService from "./service"
 import { encryptData } from "../../common/hashings"
-import { composeFilter } from "./helper"
+import { composeFilter, generateInviteCode } from "./helper"
 
 export const create = async (
     req: Request,
@@ -12,9 +12,14 @@ export const create = async (
     next: NextFunction
 ) => {
     try {
+        const code = generateInviteCode()
         const [_, crtError] = await tryPromise(
             new PoolService({}).create({
                 ...req.body,
+                config: {
+                    ...req.body.config,
+                    code
+                },
                 createdBy: req.user._id,
                 totalMembers: 0,
                 password: encryptData(req.body.password),

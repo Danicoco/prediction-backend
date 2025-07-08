@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express"
 import { catchError, success, tryPromise } from "../../common/utils"
 import CompetitionService from "./service"
 import FootballData from "../../thirdpartyApi/football"
+import News from "../../thirdpartyApi/news"
 
 export const fetch = async (
     req: Request,
@@ -97,5 +98,21 @@ export const addFilters = async (
             .json(success("Competition defaulted successfully", {}))
     } catch (error) {
         next(error)
+    }
+}
+
+export const getNews = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+    const news = await new News().getFootballNews();
+
+    return res.status(200).json(
+        success("News retrieved", news)
+    )
+    } catch (error) {
+        next(error);
     }
 }

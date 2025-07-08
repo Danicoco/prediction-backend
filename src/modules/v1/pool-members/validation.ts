@@ -21,6 +21,13 @@ export const createSchema = z
     })
     .strict()
 
+export const updateSchema = z
+    .object({
+        poolId: z.string({ required_error: "Enter pool name" }).nonempty(),
+        status: z.enum(['pending', 'approved', 'declined'])
+    })
+    .strict()
+
 export const fetchSchema = z
     .object({
         name: z.string().optional(),

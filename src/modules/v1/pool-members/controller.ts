@@ -4,20 +4,22 @@ import { NextFunction, Request, Response } from "express"
 import { catchError, success, tryPromise } from "../../common/utils"
 import PoolMemberService from "./service"
 import { composeFilter } from "./helper"
+import PoolService from "../pools/service"
 
 export const create = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const { poolId } = req.body;
+    const { pool } = req.body;
     try {
         const [_, crtError] = await tryPromise(
             new PoolMemberService({}).create({
-                pool: poolId,
+                pool,
                 user: String(req.user._id),
                 totalAmountSpent: 0,
-                gameWeeksParticipated: []
+                gameWeeksParticipated: [],
+                status: 'pending'
             })
         )
 
@@ -26,6 +28,36 @@ export const create = async (
         return res
             .status(201)
             .json(success("Pool joined successfully", {}, {  }))
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { poolId, status } = req.body;
+    try {
+        const [pool, err] = await tryPromise(
+            new PoolService({ _id: poolId }).findOne()
+        );
+
+        if (err) throw catchError("There was an error", 400);
+        if (!pool) throw catchError("This pool no longer exist", 404);
+
+        const [_, crtError] = await tryPromise(
+            new PoolMemberService({ _id: req.params._id }).update({
+                status
+            })
+        )
+
+        if (crtError) throw catchError("An error occurred! Try again", 400)
+
+        return res
+            .status(200)
+            .json(success("Pool updated successfully", {}, {  }))
     } catch (error) {
         next(error)
     }

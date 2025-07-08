@@ -2,8 +2,8 @@
 
 import { Router } from "express"
 
-import { createSchema, fetchSchema } from "./validation"
-import { create, fetch, } from "./controller"
+import { createSchema, fetchSchema, updateSchema } from "./validation"
+import { create, fetch, update } from "./controller"
 import { validator } from "../../common/utils"
 import { validateCreate } from "./middleware"
 
@@ -17,6 +17,12 @@ poolMemberRouter.post(
     validator.body(createSchema),
     validateCreate,
     create
+)
+
+poolMemberRouter.patch(
+    "/:_id",
+    validator.body(updateSchema),
+    update
 )
 
 poolMemberRouter.get(

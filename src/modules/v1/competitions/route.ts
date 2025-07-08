@@ -2,7 +2,7 @@
 
 import { Router } from "express"
 
-import { addFilters, fetch, makeDefault } from "./controller"
+import { addFilters, fetch, getNews, makeDefault } from "./controller"
 
 const competitionRouter = Router({
     caseSensitive: true,
@@ -10,7 +10,8 @@ const competitionRouter = Router({
 })
 
 competitionRouter.get("/", fetch)
-competitionRouter.post("/:code", makeDefault)
+competitionRouter.get("/news", getNews)
 competitionRouter.patch("/:id", addFilters)
+competitionRouter.post("/:code", makeDefault)
 
 export default competitionRouter

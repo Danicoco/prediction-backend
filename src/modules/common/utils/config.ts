@@ -27,7 +27,8 @@ export const configs = {
     PAYSTACK_SECRET: getEnv("PAYSTACK_SECRET"), 
     PAYSTACK_URL: getEnv("PAYSTACK_URL"),
     PAYSTACK_PUBLIC: getEnv("PAYSTACK_PUBLIC"),
-    PAYSTACK_PROD_PUBLIC: getEnv("PAYSTACK_PROD_PUBLIC")
+    PAYSTACK_PROD_PUBLIC: getEnv("PAYSTACK_PROD_PUBLIC"),
+    NEWS_API: getEnv("NEWS_API")
 }
 
 validateEnvs(Object.keys(configs))

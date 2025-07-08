@@ -11,7 +11,8 @@ const configSchema = new Schema(
         amount: { type: "Number", required: true },
         paid: { type: "Boolean", required: true },
         poolSharing: { type: "String", required: true },
-        endDate: { type: "Date", required: true }
+        endDate: { type: "Date", required: true },
+        code: { type: "String", required: true },
     })
 
 const PoolSchema: Schema = new Schema<IPool>(

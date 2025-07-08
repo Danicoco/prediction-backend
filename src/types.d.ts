@@ -68,6 +68,7 @@ interface IPool extends DefaultAttributes {
         paid: boolean
         poolSharing: "first-take-all" | "top-three"
         endDate: Date;
+        code: string;
     }
     totalMembers: number
     competition: string;
@@ -82,6 +83,7 @@ interface IPoolMember extends DefaultAttributes {
     user: string
     gameWeeksParticipated: GameWeek[]
     totalAmountSpent: number
+    status: 'accepted' | 'declined' | 'pending'
 }
 
 type Area = {
