@@ -34,5 +34,7 @@ export const fetchSchema = z
         privacy: z.string().optional(),
         createdBy: z.string().optional(),
         status: z.string().optional(),
+        user: z.string().optional(),
+        poolId: z.string().optional(),
     })
     .strict()
