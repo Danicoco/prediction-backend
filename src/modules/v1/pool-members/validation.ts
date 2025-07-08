@@ -33,5 +33,6 @@ export const fetchSchema = z
         name: z.string().optional(),
         privacy: z.string().optional(),
         createdBy: z.string().optional(),
+        status: z.string().optional(),
     })
     .strict()
