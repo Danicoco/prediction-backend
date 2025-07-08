@@ -2,8 +2,6 @@
 
 import { Request, Response, NextFunction } from "express"
 import { catchError, tryPromise } from "../../common/utils"
-import { debitWallet } from "../wallets/helper"
-import { db } from "../../../databases/connection"
 import PoolService from "../pools/service"
 import PoolMemberService from "./service"
 
@@ -29,20 +27,8 @@ export const validateCreate = async (
         if (!pool) throw catchError("Pool does not exist", 400)
             if (!pool.isActive) throw catchError("Pool have been closed", 400);
 
-        if (pool.config.paid && pool.config.amount) {
-            const session = await db.startSession()
-            await session.withTransaction(async () => {
-                debitWallet({
-                    userId: String(req.user._id),
-                    session: session,
-                    amount: pool.config.amount,
-                    isWithdrawal: false,
-                    pendingTransaction: false,
-                    transactionMeta: { pool: name, action: "create pool" },
-                })
-            })
-        }
-
+        
+        res.locals = { pool }
         return next()
     } catch (error) {
         next(error)

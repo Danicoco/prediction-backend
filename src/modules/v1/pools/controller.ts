@@ -27,7 +27,7 @@ export const create = async (
                             code,
                         },
                         createdBy: req.user._id,
-                        totalMembers: 0,
+                        totalMembers: 1,
                         password: encryptData(req.body.password),
                     },
                     session
