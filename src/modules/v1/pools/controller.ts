@@ -5,6 +5,9 @@ import { catchError, success, tryPromise } from "../../common/utils"
 import PoolService from "./service"
 import { encryptData } from "../../common/hashings"
 import { composeFilter, generateInviteCode } from "./helper"
+import { db } from "../../../databases/connection"
+import PoolMemberService from "../pool-members/service"
+import { debitWallet } from "../wallets/helper"
 
 export const create = async (
     req: Request,
@@ -13,24 +16,51 @@ export const create = async (
 ) => {
     try {
         const code = generateInviteCode()
-        const [_, crtError] = await tryPromise(
-            new PoolService({}).create({
-                ...req.body,
-                config: {
-                    ...req.body.config,
-                    code
-                },
-                createdBy: req.user._id,
-                totalMembers: 0,
-                password: encryptData(req.body.password),
-            })
-        )
+        const session = await db.startSession()
+        await session.withTransaction(async () => {
+            const [newPool, crtError] = await tryPromise(
+                new PoolService({}).create(
+                    {
+                        ...req.body,
+                        config: {
+                            ...req.body.config,
+                            code,
+                        },
+                        createdBy: req.user._id,
+                        totalMembers: 0,
+                        password: encryptData(req.body.password),
+                    },
+                    session
+                )
+            )
 
-        if (crtError) throw catchError("An error occurred! Try again", 400)
+            if (crtError) throw catchError("An error occurred! Try again", 400)
+
+            if (Number(req.body.config.amount)) {
+                await debitWallet({
+                    userId: String(req.user._id),
+                    session,
+                    amount: Number(req.body.config.amount),
+                    isWithdrawal: false,
+                    pendingTransaction: false,
+                    transactionMeta: { ...req.body, action: "Create Pool" },
+                })
+            }
+            await new PoolMemberService({}).create(
+                {
+                    pool: String(newPool?._id),
+                    user: String(req.user._id),
+                    gameWeeksParticipated: [],
+                    totalAmountSpent: req.body.config.amount,
+                    status: "approved" as any,
+                },
+                session
+            )
+        })
 
         return res
             .status(201)
-            .json(success("Account created successfully", {}, {  }))
+            .json(success("Account created successfully", {}, {}))
     } catch (error) {
         next(error)
     }
