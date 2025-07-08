@@ -103,3 +103,22 @@ export const fetch = async (
         next(error)
     }
 }
+
+export const getCount = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { pool } = req.query
+    try {
+        const [pending, declined, approved] = await Promise.all([
+            new PoolMemberService({ pool, status: 'pending' }).count(),
+            new PoolMemberService({ pool, status: 'declined' }).count(),
+            new PoolMemberService({ pool, status: 'approved' }).count(),
+        ])
+
+        return res.status(200).json(success("Members count retrieved", { approved, declined, pending }))
+    } catch (error) {
+        next(error)
+    }
+}

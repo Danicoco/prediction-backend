@@ -83,7 +83,7 @@ interface IPoolMember extends DefaultAttributes {
     user: string
     gameWeeksParticipated: GameWeek[]
     totalAmountSpent: number
-    status: 'accepted' | 'declined' | 'pending'
+    status: 'approved' | 'declined' | 'pending'
 }
 
 type Area = {
