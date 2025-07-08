@@ -7,5 +7,7 @@ export const composeFilter = (req: Request) => {
     if (user) filter = { ...filter, user: String(user) };
     if (status) filter = { ...filter, status }
 
+    console.log({ filter });
+
     return filter;
 }
