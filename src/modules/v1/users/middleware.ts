@@ -6,6 +6,7 @@ import UserService from "./service"
 import { randomInt } from "crypto"
 import { configs } from "../../common/utils/config"
 import { addMinutes, isAfter } from "date-fns"
+import { decrytData, encryptData } from "../../common/hashings"
 
 export const validateCreate = async (
     req: Request,
@@ -93,6 +94,31 @@ export const validateResendCode = async (
         if (user.verifiedAt)
             throw catchError("Your account has been verified. Proceed to login")
         req.body = { otp: randomInt(1000, 9999) }
+        req.params = { id: String(user._id) }
+        return next()
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const validateChangePassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { oldPassword, password } = req.body
+    const user = req.user;
+    try {
+        if (user && !user?.isActive)
+            throw catchError("Your account has been deactivated", 400)
+        if (user.verifiedAt)
+            throw catchError("Your account has been verified. Proceed to login")
+
+        const isMatch = decrytData(oldPassword) === user.password;
+        if (!isMatch) throw catchError("Invalid password!", 400);
+
+        
+        req.body = { password: encryptData(password) }
         req.params = { id: String(user._id) }
         return next()
     } catch (error) {

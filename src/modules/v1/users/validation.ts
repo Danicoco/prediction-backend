@@ -62,6 +62,13 @@ export const resendCodeSchema = z
     })
     .strict()
 
+export const changePasswordSchema = z
+    .object({
+        oldPassword: z.string({ required_error: "Enter current password" }).nonempty().min(8),
+        password: z.string({ required_error: "Enter new password" }).nonempty().min(8),
+    })
+    .strict()
+
 export const updateSchema = z
     .object({
         nin: z.string().optional(),

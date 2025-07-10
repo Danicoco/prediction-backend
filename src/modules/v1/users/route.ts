@@ -2,10 +2,10 @@
 
 import { Router } from "express"
 
-import { createSchema, fetchSchema, loginSchema, resendCodeSchema, updateSchema, verifySchema } from "./validation"
+import { changePasswordSchema, createSchema, fetchSchema, loginSchema, resendCodeSchema, updateSchema, verifySchema } from "./validation"
 import { update, create, fetch, login, profile } from "./controller"
 import { Authenticate, validator } from "../../common/utils"
-import { validateCreate, validateResendCode, verifyAccount } from "./middleware"
+import { validateChangePassword, validateCreate, validateResendCode, verifyAccount } from "./middleware"
 
 const userRouter = Router({
     caseSensitive: true,
@@ -23,6 +23,14 @@ userRouter.post(
     "/verify-account",
     validator.body(verifySchema),
     verifyAccount,
+    update
+)
+
+userRouter.patch(
+    "/change-password",
+    validator.body(changePasswordSchema),
+    Authenticate,
+    validateChangePassword,
     update
 )
 
