@@ -111,8 +111,6 @@ export const validateChangePassword = async (
     try {
         if (user && !user?.isActive)
             throw catchError("Your account has been deactivated", 400)
-        if (user.verifiedAt)
-            throw catchError("Your account has been verified. Proceed to login")
 
         const isMatch = decrytData(oldPassword) === user.password;
         if (!isMatch) throw catchError("Invalid password!", 400);
