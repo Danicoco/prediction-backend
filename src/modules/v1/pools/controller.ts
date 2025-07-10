@@ -77,7 +77,10 @@ export const fetch = async (
             new PoolService({}).findAll(
                 composeFilter(req),
                 Number(page),
-                Number(limit)
+                Number(limit),
+                [
+                    { path: 'createdBy', select: 'firstName lastName avatar username' }
+                ]
             )
         )
 
