@@ -79,7 +79,8 @@ export const fetch = async (
                 Number(page),
                 Number(limit),
                 [
-                    { path: 'createdBy', select: 'firstName lastName avatar username' }
+                    { path: 'createdBy', select: 'firstName lastName avatar username' },
+                    { path: 'competition', select: 'name logo code' }
                 ]
             )
         )
