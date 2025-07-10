@@ -71,8 +71,10 @@ export const changePasswordSchema = z
 
 export const updateSchema = z
     .object({
-        nin: z.string().optional(),
-        dateOfBirth: z.string().optional(),
+        firstName: z.string().optional(),
+        lastName: z.string().optional(),
+        gender: z.string().optional(),
+        phoneNumber: z.string().optional(),
         avatar: z.string().optional(),
     })
     .strict()
