@@ -48,7 +48,7 @@ export const fetch = async (
 
         const [allComps, compErr] = await tryPromise(
             new CompetitionService({ default: true }).findAll({
-                $and: [
+                $or: [
                     { _id: { $in: userCompIds } },
                     { default: true }
                 ]
