@@ -53,6 +53,7 @@ export const create = async (
                     gameWeeksParticipated: [],
                     totalAmountSpent: req.body.config.amount,
                     status: "approved" as any,
+                    type: 'captain'
                 },
                 session
             )

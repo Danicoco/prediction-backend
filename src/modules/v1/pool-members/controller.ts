@@ -24,7 +24,11 @@ export const create = async (
                     user: String(req.user._id),
                     totalAmountSpent: 0,
                     gameWeeksParticipated: [],
-                    status: "pending",
+                    status:
+                        pool.config.paid && pool.config.amount
+                            ? "pending"
+                            : "approved",
+                    type: "player",
                 })
             )
 
@@ -93,9 +97,7 @@ export const fetch = async (
                 composeFilter(req),
                 Number(page),
                 Number(limit),
-                [
-                    { path: 'user', select: 'firstName lastName email' }
-                ]
+                [{ path: "user", select: "firstName lastName email" }]
             )
         )
 
@@ -115,12 +117,20 @@ export const getCount = async (
     const { pool } = req.query
     try {
         const [pending, declined, approved] = await Promise.all([
-            new PoolMemberService({ pool, status: 'pending' }).count(),
-            new PoolMemberService({ pool, status: 'declined' }).count(),
-            new PoolMemberService({ pool, status: 'approved' }).count(),
+            new PoolMemberService({ pool, status: "pending" }).count(),
+            new PoolMemberService({ pool, status: "declined" }).count(),
+            new PoolMemberService({ pool, status: "approved" }).count(),
         ])
 
-        return res.status(200).json(success("Members count retrieved", { approved, declined, pending }))
+        return res
+            .status(200)
+            .json(
+                success("Members count retrieved", {
+                    approved,
+                    declined,
+                    pending,
+                })
+            )
     } catch (error) {
         next(error)
     }

@@ -13,6 +13,7 @@ const PoolMemberSchema: Schema = new Schema<IPoolMember>(
         gameWeeksParticipated: { type: ["String"], },
         totalAmountSpent: { type: "Number", default: 0 },
         status: { type: "String", default: "pending" },
+        type: { type: "String", default: "player" },
         deletedAt: { type: "String", default: null },
     },
     {
