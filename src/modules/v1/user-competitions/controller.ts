@@ -41,22 +41,24 @@ export const fetch = async (
     const { _id } = req.user;
     try {
         const [userCompetitions, error] = await tryPromise(
-            new UserCompetitionService({ user: String(_id) }).findAll({}, 1, 20)
+            new UserCompetitionService({ user: String(_id) }).findAll({}, 1, 50)
         )
 
-        const [defaultComp, compErr] = await tryPromise(
-            new CompetitionService({ default: true }).findOne()
+        const userCompIds = userCompetitions?.docs?.map(doc => doc.competition);
+
+        const [allComps, compErr] = await tryPromise(
+            new CompetitionService({ default: true }).findAll({
+                $and: [
+                    { _id: { $in: userCompIds } },
+                    { default: true }
+                ]
+            })
         )
 
         if (error) throw catchError("Error processing request")
         if (compErr) throw catchError("Error processing request")                
-        
-        const competitions = userCompetitions?.docs || [];
-        if(defaultComp) {
-            competitions?.push({ ...defaultComp, user: String(_id), competition: String(defaultComp._id) });
-        }
 
-        return res.status(200).json(success("User Competitions retrieved successfully", competitions))
+        return res.status(200).json(success("User Competitions retrieved successfully", allComps))
     } catch (error) {
         next(error)
     }
