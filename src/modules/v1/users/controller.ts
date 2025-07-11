@@ -46,6 +46,7 @@ export const login = async (
         const [user, error] = await tryPromise(
             new UserService({
                 $or: [{ phoneNumber: to }, { email: to }],
+                isActive: true
             }).findOne()
         )
 
@@ -120,6 +121,23 @@ export const profile = async (
         return res
             .status(200)
             .json(success("Account retrieved successfully", result))
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const remove = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const user = req.user
+    try {
+        await new UserService({ _id: user._id }).update({ isActive: false })
+
+        return res
+            .status(200)
+            .json(success("Account deleted successfully", {}))
     } catch (error) {
         next(error)
     }

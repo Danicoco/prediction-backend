@@ -3,7 +3,7 @@
 import { Router } from "express"
 
 import { changePasswordSchema, createSchema, fetchSchema, loginSchema, resendCodeSchema, updateSchema, verifySchema } from "./validation"
-import { update, create, fetch, login, profile } from "./controller"
+import { update, create, fetch, login, profile, remove } from "./controller"
 import { Authenticate, validator } from "../../common/utils"
 import { validateChangePassword, validateCreate, validateResendCode, verifyAccount } from "./middleware"
 
@@ -58,6 +58,12 @@ userRouter.get(
     "/profile",
     Authenticate,
     profile
+)
+
+userRouter.delete(
+    "/profile",
+    Authenticate,
+    remove
 )
 
 userRouter.get("/", validator.body(fetchSchema), fetch)
