@@ -1,6 +1,6 @@
 /** @format */
 
-import { endOfWeek, startOfWeek } from "date-fns"
+import { addMonths, endOfWeek, startOfWeek } from "date-fns"
 
 export const composeFilter = (query: Record<string, string>) => {
     const { competition, status, stage, matchday, date } = query
@@ -11,7 +11,7 @@ export const composeFilter = (query: Record<string, string>) => {
             ...filter,
             date: {
                 $gte: startOfWeek(new Date(date)),
-                $lte: endOfWeek(new Date(date)),
+                $lte: addMonths(endOfWeek(new Date()), 3),
             },
         }
     }

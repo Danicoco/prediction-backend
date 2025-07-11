@@ -6,7 +6,7 @@ import MatchService from "./service"
 import { matchPipeline } from "./helper"
 import FootballData from "../../thirdpartyApi/football"
 import CompetitionService from "../competitions/service"
-import { endOfWeek, format, startOfWeek } from "date-fns"
+import { addMonths, endOfWeek, format, startOfWeek } from "date-fns"
 
 
 const getMatchWeek = async (query: Record<string, string>) => {
@@ -27,7 +27,7 @@ const getMatchWeek = async (query: Record<string, string>) => {
         if (!comp) throw catchError("Error processing request", 400)
         const date = {
             dateFrom: format(startOfWeek(new Date()), "yyyy-MM-dd"),
-            dateTo: format(endOfWeek(new Date()), "yyyy-MM-dd"),
+            dateTo: format(addMonths(endOfWeek(new Date()), 3), "yyyy-MM-dd"),
         }
         const matchQuery = await new FootballData().getCompetitionMatches(
             comp.code,
