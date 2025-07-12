@@ -62,6 +62,14 @@ export const resendCodeSchema = z
     })
     .strict()
 
+export const resetPasswordSchema = z
+    .object({
+        email: z.string({ required_error: "Enter email" }).nonempty(),
+        otp: z.string({ required_error: "Enter otp" }).nonempty().min(8),
+        password: z.string({ required_error: "Enter new password" }).nonempty().min(8),
+    })
+    .strict()
+
 export const changePasswordSchema = z
     .object({
         oldPassword: z.string({ required_error: "Enter current password" }).nonempty().min(8),
