@@ -22,6 +22,7 @@ interface IUser extends DefaultAttributes {
     otp: string
     isActive: boolean
     avatar: string
+    sendNotification: boolean
 }
 
 interface IWallet extends DefaultAttributes {

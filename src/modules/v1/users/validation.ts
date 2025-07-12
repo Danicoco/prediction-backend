@@ -47,6 +47,12 @@ export const verifySchema = z
     })
     .strict()
 
+export const notificationSchema = z
+    .object({
+        sendNotification: z.boolean({ required_error: "Send notification required" }),
+    })
+    .strict()
+
 export const loginSchema = z
     .object({
         to: z
@@ -65,8 +71,8 @@ export const resendCodeSchema = z
 export const resetPasswordSchema = z
     .object({
         email: z.string({ required_error: "Enter email" }).nonempty(),
-        otp: z.string({ required_error: "Enter otp" }).nonempty().min(8),
-        password: z.string({ required_error: "Enter new password" }).nonempty().min(8),
+        otp: z.string({ required_error: "Enter otp" }).nonempty(),
+        password: z.string({ required_error: "Enter new password" }).nonempty().min(8, "Password must be 8 or more characters"),
     })
     .strict()
 

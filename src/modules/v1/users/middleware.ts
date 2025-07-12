@@ -74,6 +74,19 @@ export const verifyAccount = async (
     }
 }
 
+export const validateSendNotification = async (
+    req: Request,
+    _res: Response,
+    next: NextFunction
+) => {
+    try {
+        req.params = { id: String(req.user._id) }
+        return next()
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const validateResendCode = async (
     req: Request,
     res: Response,
@@ -111,7 +124,7 @@ export const validateForgetPassword = async (
         const [user, error] = await tryPromise(
             new UserService({
                 email,
-                isActive: true
+                isActive: true,
             }).findOne()
         )
 
@@ -135,25 +148,25 @@ export const validateResetPassword = async (
         const [user, error] = await tryPromise(
             new UserService({
                 email,
-                isActive: true
+                isActive: true,
             }).findOne()
         )
 
         if (error) throw catchError("Error processing request", 400)
         if (!user) throw catchError("Invalid request", 400)
-            if (configs.NODE_ENV === "production") {
-                if (
-                    isAfter(
-                        new Date(),
-                        addMinutes(new Date(String(user.updatedAt)), 10)
-                    )
+        if (configs.NODE_ENV === "production") {
+            if (
+                isAfter(
+                    new Date(),
+                    addMinutes(new Date(String(user.updatedAt)), 10)
                 )
-                    throw catchError(
-                        "Verification code has expired. Resend to proceed"
-                    )
-                if (user.otp !== otp)
-                    throw catchError("Verification Code is incorrect")
-            }
+            )
+                throw catchError(
+                    "Verification code has expired. Resend to proceed"
+                )
+            if (user.otp !== otp)
+                throw catchError("Verification Code is incorrect")
+        }
         req.body = { otp: "", password: encryptData(password) }
         req.params = { id: String(user._id) }
         return next()
@@ -168,16 +181,15 @@ export const validateChangePassword = async (
     next: NextFunction
 ) => {
     const { oldPassword, password } = req.body
-    const user = req.user;
+    const user = req.user
     try {
-        console.log({ oldPassword, password });
+        console.log({ oldPassword, password })
         if (user && !user?.isActive)
             throw catchError("Your account has been deactivated", 400)
 
-        const isMatch = decrytData(user.password) === oldPassword;
-        if (!isMatch) throw catchError("Invalid password!", 400);
+        const isMatch = decrytData(user.password) === oldPassword
+        if (!isMatch) throw catchError("Invalid password!", 400)
 
-        
         req.body = { password: encryptData(password) }
         req.params = { id: String(user._id) }
         return next()

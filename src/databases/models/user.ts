@@ -18,6 +18,7 @@ const UserSchema: Schema = new Schema<IUser>(
         isActive: { type: "Boolean", default: true },
         otp: { type: "String" },
         avatar: { type: "String" },
+        sendNotification: { type: "Boolean", default: true },
         gender: { type: "String" },
         dateOfBirth: { type: "Date", default: new Date() },
         deletedAt: { type: "String", default: null },

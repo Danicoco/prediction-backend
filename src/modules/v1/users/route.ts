@@ -2,10 +2,10 @@
 
 import { Router } from "express"
 
-import { changePasswordSchema, createSchema, fetchSchema, loginSchema, resendCodeSchema, resetPasswordSchema, updateSchema, verifySchema } from "./validation"
+import { changePasswordSchema, createSchema, fetchSchema, loginSchema, notificationSchema, resendCodeSchema, resetPasswordSchema, updateSchema, verifySchema } from "./validation"
 import { update, create, fetch, login, profile, remove } from "./controller"
 import { Authenticate, validator } from "../../common/utils"
-import { validateChangePassword, validateCreate, validateForgetPassword, validateResendCode, validateResetPassword, verifyAccount } from "./middleware"
+import { validateChangePassword, validateCreate, validateForgetPassword, validateResendCode, validateResetPassword, validateSendNotification, verifyAccount } from "./middleware"
 
 const userRouter = Router({
     caseSensitive: true,
@@ -23,6 +23,13 @@ userRouter.post(
     "/verify-account",
     validator.body(verifySchema),
     verifyAccount,
+    update
+)
+
+userRouter.post(
+    "/send-notification",
+    validator.body(notificationSchema),
+    validateSendNotification,
     update
 )
 
