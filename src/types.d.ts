@@ -63,7 +63,7 @@ interface ITransaction extends DefaultAttributes {
 interface IPool extends DefaultAttributes {
     name: string
     description: string
-    privacy: "Public" | "Private"
+    privacy: "public" | "private"
     config: {
         amount: number
         paid: boolean
@@ -75,6 +75,7 @@ interface IPool extends DefaultAttributes {
     competition: string;
     isActive: boolean
     createdBy: string
+    icon?: string
 }
 
 type GameWeek = { week: number; point: number }
@@ -229,6 +230,7 @@ interface IMatch extends DefaultAttributes {
     date: Date;
     competition: string;
     stage: string;
+    matchId: string;
 }
 
 interface IPrediction extends DefaultAttributes {
@@ -254,6 +256,68 @@ interface IBank extends DefaultAttributes {
     accountName: string;
     accountNumber: string;
 }
+
+type MatchData = {
+    area: {
+      id: number;
+      name: string;
+      code: string;
+      flag: string;
+    };
+    competition: {
+      id: number;
+      name: string;
+      code: string;
+      type: string;
+      emblem: string;
+    };
+    season: {
+      id: number;
+      startDate: string; // ISO date string
+      endDate: string;   // ISO date string
+      currentMatchday: number;
+      winner: null | any; // adjust if winner data becomes known
+    };
+    id: number;
+    utcDate: string; // ISO date string
+    status: string;
+    venue: string | null;
+    matchday: number;
+    stage: string;
+    group: string | null;
+    lastUpdated: string; // ISO date string
+    homeTeam: {
+      id: number;
+      name: string;
+      shortName: string;
+      tla: string;
+      crest: string;
+    };
+    awayTeam: {
+      id: number;
+      name: string;
+      shortName: string;
+      tla: string;
+      crest: string;
+    };
+    score: {
+      winner: string | null;
+      duration: string;
+      fullTime: {
+        home: number | null;
+        away: number | null;
+      };
+      halfTime: {
+        home: number | null;
+        away: number | null;
+      };
+    };
+    odds: {
+      msg: string;
+    };
+    referees: any[]; // replace with detailed referee type if known
+  };
+  
 
 type PaystackResponse = {
     status: boolean

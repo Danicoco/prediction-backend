@@ -2,6 +2,7 @@
 
 import { Agenda } from "@hokify/agenda"
 import { configs } from "../utils/config"
+import { processPrediction } from "../jobs/prediction";
 
 const agenda = new Agenda({
     name: "Caresify",
@@ -13,9 +14,9 @@ agenda
     .on("ready", () => console.log("Agenda started!"))
     .on("error", err => console.log("Agenda connection error!", err?.message));
 
-// const definitions: any = []
+const definitions = [processPrediction]
 
-// definitions.forEach(definition => definition(agenda));
+definitions.forEach(definition => definition(agenda));
 
 (async () => {
     await agenda.start()

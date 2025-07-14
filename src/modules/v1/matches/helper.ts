@@ -25,7 +25,7 @@ export const composeFilter = (query: Record<string, string>) => {
 
 export const matchPipeline = (
     query: Record<string, string>,
-    userId: string
+    userId: string,
 ) => {
     const filter = composeFilter(query)
 
@@ -33,6 +33,10 @@ export const matchPipeline = (
         {
             $match: {
                 ...filter,
+                $and: [
+                    { "awayTeam.score": { $eq: null } },
+                    { "homeTeam.score": { $eq: null } },
+                ]
             },
         },
         {
@@ -40,6 +44,52 @@ export const matchPipeline = (
                 let: {
                     userId: { $toString: userId },
                     competitionId: { $toString: query.competition },
+                    matchId: { $toString: "$_id" },
+                },
+                from: "predictions",
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ["$user", "$$userId"] },
+                                    { $eq: ["$match", "$$matchId"] },
+                                    {
+                                        $eq: [
+                                            "$competition",
+                                            "$$competitionId",
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+                as: "prediction",
+            },
+        },
+    ]
+}
+
+export const scorePipeline = (
+    competition: string,
+    userId: string,
+) => {
+    return [
+        {
+            $match: {
+                competition,
+                $and: [
+                    { "awayTeam.score": { $ne: null } },
+                    { "homeTeam.score": { $ne: null } },
+                ]
+            },
+        },
+        {
+            $lookup: {
+                let: {
+                    userId: { $toString: userId },
+                    competitionId: { $toString: competition },
                     matchId: { $toString: "$_id" },
                 },
                 from: "predictions",

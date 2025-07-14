@@ -37,6 +37,15 @@ class FootballData {
         )
         return data?.matches
     }
+
+    public async getMatch(
+        id: string,
+    ): Promise<Match> {
+        const { data } = await this.http().get(
+            `/v4/matches/${id}`,
+        )
+        return data
+    }
 }
 
 export default FootballData

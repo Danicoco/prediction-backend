@@ -72,7 +72,7 @@ export const fetch = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { page, limit } = req.query
+    const { page, limit = 100 } = req.query
     try {
         const [pools, error] = await tryPromise(
             new PoolService({}).findAll(

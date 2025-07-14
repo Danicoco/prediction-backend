@@ -1,17 +1,18 @@
 /** @format */
 
 import { endOfDay, startOfDay } from "date-fns"
+import { Types } from "mongoose"
 
 export const leaderboardPipeline = (
     competition: string,
-    userIds = [],
+    userIds = [] as string[],
     fromDate: string,
     toDate: string
 ) => [
     {
         $match: {
             ...(userIds.length && {
-                _id: { $in: userIds },
+                _id: { $in: userIds.map(userId => new Types.ObjectId(userId)) },
             }),
         },
     },
@@ -86,3 +87,20 @@ export const leaderboardPipeline = (
         },
     },
 ]
+
+export const calculatePredictionPoint = (
+    homeScore: number,
+    awayScore: number,
+    predictedHomeScore: number,
+    predictedAwayScore: number
+) => {
+    let point = 0;
+
+    if (homeScore === predictedHomeScore && awayScore === predictedAwayScore) {
+        point = 3;
+    }
+
+    
+
+    return point;
+}

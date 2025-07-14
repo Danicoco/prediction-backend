@@ -7,6 +7,9 @@ import UserService from "./service"
 import { decrytData, encryptData } from "../../common/hashings"
 import { addHours } from "date-fns"
 import { randomInt } from "crypto"
+import { db } from "../../../databases/connection"
+import { getGeneralPool } from "../pools/helper"
+import PoolMemberService from "../pool-members/service"
 
 export const create = async (
     req: Request,
@@ -14,19 +17,29 @@ export const create = async (
     next: NextFunction
 ) => {
     try {
-        console.log({ password: encryptData(req.body.password) })
         const otp = randomInt(1000, 9999)
-        const [_, crtError] = await tryPromise(
-            new UserService({}).create({
-                ...req.body,
-                otp,
-                password: encryptData(req.body.password),
+        const session = await db.startSession()
+        await session.withTransaction(async () => {
+            const [user, crtError] = await tryPromise(
+                new UserService({}).create({
+                    ...req.body,
+                    otp,
+                    password: encryptData(req.body.password),
+                })
+            )
+
+            if (crtError) throw catchError("An error occurred! Try again", 400)
+            const [pool, plErr] = await tryPromise(getGeneralPool())
+            if (plErr) throw catchError("An error occurred! Try again", 400)
+            await new PoolMemberService({}).create({
+                pool: String(pool?._id),
+                user: String(user?._id),
+                gameWeeksParticipated: [],
+                totalAmountSpent: 0,
+                status: "approved",
+                type: "player",
             })
-        )
-
-        if (crtError) throw catchError("An error occurred! Try again", 400)
-
-        // create paid subscription for user with pim and those without
+        })
 
         return res
             .status(201)
@@ -46,7 +59,7 @@ export const login = async (
         const [user, error] = await tryPromise(
             new UserService({
                 $or: [{ phoneNumber: to }, { email: to }],
-                isActive: true
+                isActive: true,
             }).findOne()
         )
 
@@ -93,7 +106,7 @@ export const update = async (
         const token = encryptData(
             JSON.stringify({ _id: user?._id, exp: addHours(new Date(), 48) })
         )
-        
+
         return res
             .status(200)
             .json(success("Account updated successfully", { token }))
@@ -135,9 +148,7 @@ export const remove = async (
     try {
         await new UserService({ _id: user._id }).update({ isActive: false })
 
-        return res
-            .status(200)
-            .json(success("Account deleted successfully", {}))
+        return res.status(200).json(success("Account deleted successfully", {}))
     } catch (error) {
         next(error)
     }
