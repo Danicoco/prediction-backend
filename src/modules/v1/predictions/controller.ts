@@ -87,7 +87,8 @@ export const leaderboard = async (
                 competition as string,
                 userIds,
                 fromDate as string,
-                toDate as string
+                toDate as string,
+                poolId as string
             )
         )
 

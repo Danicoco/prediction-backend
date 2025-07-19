@@ -7,11 +7,12 @@ export const leaderboardPipeline = (
     competition: string,
     userIds = [] as string[],
     fromDate: string,
-    toDate: string
+    toDate: string,
+    pool: string
 ) => [
     {
         $match: {
-            ...(userIds.length && {
+            ...(pool && {
                 _id: { $in: userIds.map(userId => new Types.ObjectId(userId)) },
             }),
         },
