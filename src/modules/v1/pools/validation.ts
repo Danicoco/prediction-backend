@@ -26,6 +26,7 @@ export const createSchema = z
             .nonempty(),
         privacy: z.string({ required_error: "Select Privacy" }).nonempty(),
         competition: z.string(),
+        icon: z.string().optional(),
         config: z.object({
             amount: z.number(),
             paid: z.boolean(),
