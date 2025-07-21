@@ -3,7 +3,7 @@
 import { Router } from "express"
 
 import { changePasswordSchema, createSchema, fetchSchema, loginSchema, notificationSchema, resendCodeSchema, resetPasswordSchema, updateSchema, verifySchema } from "./validation"
-import { update, create, fetch, login, profile, remove } from "./controller"
+import { update, create, fetch, login, profile, remove, userCount } from "./controller"
 import { Authenticate, validator } from "../../common/utils"
 import { validateChangePassword, validateCreate, validateForgetPassword, validateResendCode, validateResetPassword, validateSendNotification, verifyAccount } from "./middleware"
 
@@ -88,5 +88,6 @@ userRouter.delete(
 )
 
 userRouter.get("/", validator.body(fetchSchema), fetch)
+userRouter.get("/", Authenticate, userCount)
 
 export default userRouter

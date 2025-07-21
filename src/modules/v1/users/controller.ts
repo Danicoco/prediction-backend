@@ -176,3 +176,18 @@ export const fetch = async (
         next(error)
     }
 }
+
+export const userCount = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const totalUsers = await new UserService({}).count();
+
+
+        return res.status(200).json(success("Users count retrieved", { totalUsers }))
+    } catch (error) {
+        next(error)
+    }
+}
