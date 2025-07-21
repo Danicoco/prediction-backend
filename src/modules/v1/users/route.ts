@@ -88,6 +88,6 @@ userRouter.delete(
 )
 
 userRouter.get("/", validator.body(fetchSchema), fetch)
-userRouter.get("/", Authenticate, userCount)
+userRouter.get("/count", Authenticate, userCount)
 
 export default userRouter
